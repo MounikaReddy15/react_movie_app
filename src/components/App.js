@@ -1,5 +1,5 @@
 import React from 'react';
-import { data } from '../data';
+// import { data } from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 
@@ -13,6 +13,7 @@ function App() {
           <div className="tab"> Favourites</div>
         </div>
         <div className="list">
+          {/* index of particular movie in data array */}
         {data.map((movie, index) => {
           return <MovieCard movie = {movie} key={`movies-${index}`}/>
         })}
