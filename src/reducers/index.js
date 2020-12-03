@@ -10,7 +10,8 @@ const initialMoviesState = {
     showFavourites: false
 }
 
-export default function movies(state = initialMoviesState, action) {
+export function movies(state = initialMoviesState, action) {
+    console.log('movie reducer');
     // we shudn't compare string directly
     // comparing to a var is better if we frequently need to change the value
 
@@ -55,3 +56,25 @@ export default function movies(state = initialMoviesState, action) {
     }
 }
 
+// the api which we will use to search will return a single obj as result
+const initialSearchState = {
+    result: {}
+};
+
+export function search (state = initialSearchState, action) {
+    console.log('search reducer');
+    return state;
+
+}
+
+const initialRootState = {
+    movies: initialMoviesState,
+    search: initialSearchState
+}
+
+export default function rootReducer (state = initialRootState, action) {
+    return  {
+        movies: movies(state.movies, action),
+        search: search(state.search, action)
+    }
+}
