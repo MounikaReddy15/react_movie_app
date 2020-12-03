@@ -2,6 +2,7 @@ import React from 'react';
 import { data } from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
+import { addMovies } from '../actions';
 
 class App extends React.Component {
   componentDidMount() {
@@ -14,10 +15,13 @@ class App extends React.Component {
     });
     // make api call
     // dispatch action
-    store.dispatch({
-      type: 'ADD_MOVIES',
-      movies: data
-    });
+    // instead of hardcoding the data every time to perform this action
+    // we can store it in a func and call whenever reqd
+    store.dispatch(addMovies(data));
+    //   {
+    //   type: 'ADD_MOVIES',
+    //   movies: data
+    // });
     console.log('state', store.getState());
   }
   render() {
