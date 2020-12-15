@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import { addMovies, setShowFavourites } from '../actions';
 import { data as moviesList } from "../data";
-import { StoreContext, storeContext } from "../index";
+import { StoreContext } from "../index";
 
 class App extends React.Component {
   componentDidMount() {
@@ -50,38 +50,43 @@ render() {
     console.log('render', this.props.store.getState());
     const displayMovies = showFavourites ? favourites : list
 
+   return (
+    <div className="App">
+      <Navbar search={search}/>
+      <div className= "main">
+        <div className = "tabs">
+          <div className={`tab ${showFavourites ? '' : 'active-tabs'}`} onClick = {() => this.onChangeTab(false)}> Movies </div>
+          <div className={`tab ${showFavourites ? 'active-tabs' : ''}`} onClick = {() => this.onChangeTab(true)}> Favourites</div>
+        </div>
+        <div className="list">
+          {/* index of particular movie in data array */}
+        {displayMovies.map((movie, index) => {
+          return <MovieCard 
+          movie = {movie} 
+          key={`movies-${index}`}
+          dispatch = {this.props.store.dispatch}
+          isFavourite = {this.isMovieFavourite(movie)}
+          />
+        })}
+        </div>
+        {displayMovies.length === 0 ? <div className = "no-movies">No movies to display!</div> : null}
+      </div>
+    </div>
+  );
+}
+}
+
+// its a wrapper around app compo 
+class AppWrapper extends React.Component {
+  render() {
     return (
-      <StoreContext.Consumer>
-        {/* consumer expects a func */}
-        {(store)=> {
-           return (
-              <div className="App">
-                <Navbar dispatch={this.props.store.dispatch} search={search}/>
-                <div className= "main">
-                  <div className = "tabs">
-                    <div className={`tab ${showFavourites ? '' : 'active-tabs'}`} onClick = {() => this.onChangeTab(false)}> Movies </div>
-                    <div className={`tab ${showFavourites ? 'active-tabs' : ''}`} onClick = {() => this.onChangeTab(true)}> Favourites</div>
-                  </div>
-                  <div className="list">
-                    {/* index of particular movie in data array */}
-                  {displayMovies.map((movie, index) => {
-                    return <MovieCard 
-                    movie = {movie} 
-                    key={`movies-${index}`}
-                    dispatch = {this.props.store.dispatch}
-                    isFavourite = {this.isMovieFavourite(movie)}
-                    />
-                  })}
-                  </div>
-                  {displayMovies.length === 0 ? <div className = "no-movies">No movies to display!</div> : null}
-                </div>
-              </div>
-            );
-          }}
-          </StoreContext.Consumer>
-        );
-
-}
+      // consumer can only be used in render
+        <StoreContext.Consumer>
+          {/* consumer expects a callbacfunc */}
+          {(store)=> <App store= {store} />}
+        </StoreContext.Consumer>
+      );
+  }
 }
 
-export default App;
+export default AppWrapper;
