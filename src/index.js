@@ -1,4 +1,5 @@
-import React, { createContext } from 'react';
+import React from 'react';
+import { Provider } from "react-redux";
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
@@ -46,8 +47,8 @@ const store = createStore(rootReducer, applyMiddleware(logger, thunk));
 console.log('store', store);
 // console.log('before state', store.getState());
 
-export const StoreContext = createContext();
-console.log(StoreContext, 'StoreContext')
+// export const StoreContext = createContext();
+// console.log(StoreContext, 'StoreContext')
 
 // update store by dispatching actions
 // store.dispatch({
@@ -57,58 +58,57 @@ console.log(StoreContext, 'StoreContext')
 
 // console.log('after state', store.getState());
 
-class Provider extends React.Component {
-  render () {
-    const {store} = this.props;
-   return <StoreContext.Provider value = {store}>
-     {this.props.children}
-    </StoreContext.Provider>  
-
-  }
-}
+// class Provider extends React.Component {
+//   render () {
+//     const {store} = this.props;
+//    return <StoreContext.Provider value = {store}>
+//      {this.props.children}
+//     </StoreContext.Provider>  
+//   }
+// }
 
 // const connectedAppComponent = connect(callback) returns func (App) returns compo;
-export function connect(callback) {
-  return function (Component) {
-    class ConnectedComponent extends React.Component {
-    //  subscribe to store to auto rerender
-     constructor(props) {
-       super(props)
-       //  subscribe will return another func which we can use to unsubscribe store
-       this.unsubscribe =  this.props.store.subscribe(() => this.forceUpdate());
-     }
+// export function connect(callback) {
+//   return function (Component) {
+//     class ConnectedComponent extends React.Component {
+//     //  subscribe to store to auto rerender
+//      constructor(props) {
+//        super(props)
+//        //  subscribe will return another func which we can use to unsubscribe store
+//        this.unsubscribe =  this.props.store.subscribe(() => this.forceUpdate());
+//      }
 
-     //when connected compo is destroyed we shud unsubscribe  
-     componentWillUnmount () {
-       this.unsubscribe();
-     }
+//      //when connected compo is destroyed we shud unsubscribe  
+//      componentWillUnmount () {
+//        this.unsubscribe();
+//      }
      
-      render () {
-        const { store } = this.props;
-        const state = store.getState();
-          const dataToBePassedAsProps = callback(state);
-            return (
-              <Component 
-              {...dataToBePassedAsProps}
-              dispatch = {store.dispatch}
-              />
-            );
-      }
-    }
+//       render () {
+//         const { store } = this.props;
+//         const state = store.getState();
+//           const dataToBePassedAsProps = callback(state);
+//             return (
+//               <Component 
+//               {...dataToBePassedAsProps}
+//               dispatch = {store.dispatch}
+//               />
+//             );
+//       }
+//     }
 
-    // to get access of store in constructor we are wrapping the app
-      class ConnectedComponentWrapper extends React.Component {
-        render () {
-         return (
-         <StoreContext.Consumer>
-            {store => <ConnectedComponent store = {store} />}
-          </StoreContext.Consumer>
-         );
-        }
-      }
-      return ConnectedComponentWrapper;
-  }
-}
+//     // to get access of store in constructor we are wrapping the app
+//       class ConnectedComponentWrapper extends React.Component {
+//         render () {
+//          return (
+//          <StoreContext.Consumer>
+//             {store => <ConnectedComponent store = {store} />}
+//           </StoreContext.Consumer>
+//          );
+//         }
+//       }
+//       return ConnectedComponentWrapper;
+//   }
+// }
 
 ReactDOM.render(
  <Provider store = {store}>
